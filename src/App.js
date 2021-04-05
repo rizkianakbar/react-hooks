@@ -1,23 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "./useForm";
+import { useFetch } from "./useFetch";
 
 const App = () => {
-  const [count, setCount] = useState(0);
-  const [values, handleChange] = useForm({ email: "", password: "" });
+  const [values, handleChange] = useForm({
+    email: "",
+    password: "",
+    firstName: "",
+  });
+  const [count, setCount] = useState(() =>
+    localStorage.getItem("count") === null
+      ? 0
+      : JSON.parse(localStorage.getItem("count"))
+  );
+  const { data, loading } = useFetch(`http://numbersapi.com/${count}/trivia`);
+
+  useEffect(() => {
+    localStorage.setItem("count", JSON.stringify(count));
+  }, [count]);
 
   return (
     <div style={{ textAlign: "center" }}>
-      <div>
-        <button
-          onClick={() => {
-            setCount(count + 1);
-          }}
-        >
-          +
-        </button>
-        <div>{count}</div>
-      </div>
-
+      <div>{!data ? "Loading...." : data}</div>
+      <div>count : {count}</div>
+      <button onClick={() => setCount((c) => c + 1)}>increment</button><br />
+      <input
+        type="text"
+        value={values.name}
+        name="name"
+        onChange={handleChange}
+        placeholder="Enter your name"
+      />
       <input
         type="text"
         value={values.email}
