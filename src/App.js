@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
-import { Hello } from "./Hello";
 import { useForm } from "./useForm";
+import { Hello } from "./Hello";
+import { useMeasure } from "./useMeasure";
 
 const App = () => {
   const [values, handleChange] = useForm({
@@ -13,8 +14,10 @@ const App = () => {
 
   const [showHello, setShowHello] = useState(true);
 
+  const [rect, inputRef2] = useMeasure([]);
+
   return (
-    <div style={{ textAlign: "center" }}>
+    <div>
       <button onClick={() => setShowHello(!showHello)}>toggle</button>
       {showHello && <Hello />}
       <input
@@ -31,6 +34,7 @@ const App = () => {
         name="email"
         onChange={handleChange}
         placeholder="Enter your email"
+        ref={inputRef2}
       />
       <input
         type="password"
